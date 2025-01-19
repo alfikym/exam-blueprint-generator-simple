@@ -104,9 +104,11 @@
             <label for="courseTitle">Course Title:</label>
             <input type="text" id="courseTitle" placeholder="Enter course title">
         </div>
-        <div>
-            <label for="courseCoordinator">Course Coordinator:</label>
-            <input type="text" id="courseCoordinator" placeholder="Enter coordinator name">
+        <div id="instructorsContainer">
+            <label for="courseInstructor">Course Instructors:</label>
+            <input type="text" id="courseInstructor" placeholder="Enter instructor name">
+            <button onclick="addInstructor()">Add Instructor</button>
+            <button onclick="removeLastInstructor()">Remove Last Instructor</button>
         </div>
     </div>
 
@@ -121,6 +123,23 @@
     <button id="generateBlueprintButton" onclick="generateBlueprint()" style="display: none;">Generate Blueprint</button>
 
     <script>
+        function addInstructor() {
+            const container = document.getElementById('instructorsContainer');
+            const newInstructor = document.createElement('input');
+            newInstructor.type = 'text';
+            newInstructor.placeholder = 'Enter instructor name';
+            newInstructor.style.marginRight = '10px';
+            container.insertBefore(newInstructor, container.children[container.children.length - 2]);
+        }
+
+        function removeLastInstructor() {
+            const container = document.getElementById('instructorsContainer');
+            const inputs = container.querySelectorAll('input[type="text"]');
+            if (inputs.length > 1) {
+                container.removeChild(inputs[inputs.length - 1]);
+            }
+        }
+
         function addQuestionRow() {
             const container = document.getElementById('questionInputsContainer');
 
