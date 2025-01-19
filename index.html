@@ -4,199 +4,102 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Exam Blueprint Generator</title>
-
-    <!-- ✅ jsPDF for PDF Download -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
-    <!-- ✅ html2canvas for table-to-PDF conversion -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f4f4f9;
-            text-align: center;
+            margin: 0;
             padding: 20px;
+            background-color: #f9f9f9;
         }
-        input, button {
-            padding: 10px;
-            margin: 5px;
-            width: 250px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
+        h2 {
+            color: #333;
+            text-align: center;
+        }
+        label {
             font-size: 16px;
+            margin-right: 10px;
+        }
+        input {
+            padding: 5px;
+            font-size: 14px;
+            margin-right: 10px;
         }
         button {
-            background-color: #e0e0e0;
-            color: #333;
+            padding: 8px 15px;
+            font-size: 14px;
+            background-color: #d3d3d3; /* Light grey */
+            border: none;
+            border-radius: 5px;
             cursor: pointer;
-            transition: background-color 0.3s, color 0.3s;
         }
         button:hover {
-            background-color: #d6d6d6;
+            background-color: #c0c0c0; /* Slightly darker grey */
         }
-        table {
-            width: 80%;
-            margin: 20px auto;
-            border-collapse: collapse;
-        }
-        th, td {
-            padding: 10px;
-            border: 1px solid #ccc;
-        }
-        .description {
-            font-size: 12px;
-            color: #555;
+        #questionInputsContainer div {
+            display: flex;
+            align-items: center;
             margin-bottom: 10px;
-        }
-        .error {
-            color: red;
-            font-size: 14px;
-            margin-top: 10px;
         }
     </style>
 </head>
-
 <body>
+    <h2>Exam Blueprint Generator</h2>
 
-    <!-- Arabic Title and Description -->
-    <h2 style="font-weight: bold; color: #333;">نموذج لتوزيع درجات الامتحان على مواضيع المقرر بناءً على الوزن النسبي لهذه المواضيع</h2>
-    <p style="font-size: 14px; color: #555; width: 70%; margin: 0 auto;">
-        يعتمد هذا النموذج على الوقت الذي تم تخصيصه لتدريس كل فصل مع الأهمية النسبية له، وذلك لتحديد وزن فعّال لكل فصل يُستخدم في توزيع درجات الاختبار بشكل عادل ومتوازن.
-    </p>
+    <!-- Input for Number of Questions -->
+    <label for="numQuestions">Number of Questions:</label>
+    <input type="number" id="numQuestions" min="1" placeholder="Enter number of questions">
+    <button onclick="generateQuestionInputs()">Generate Inputs</button>
 
-    <h1>Exam Blueprint Generator</h1>
-    
-    <form id="blueprintForm">
-        <!-- 1. Number of Chapters -->
-        <label>Number of Chapters:</label><br>
-        <input type="number" id="chapterCount" min="1" required><br>
-        <div class="description">*Enter the total number of chapters or topics to be included in the exam.*</div>
+    <!-- Container for Generated Inputs -->
+    <div id="questionInputsContainer"></div>
 
-        <!-- 6. Generate Inputs Button -->
-        <button type="button" onclick="generateInputs()">Generate Inputs</button>
-        <div id="inputs"></div>
-
-        <!-- 5. Total Exam Marks -->
-        <label>Total Exam Marks:</label><br>
-        <input type="number" id="totalMarks" min="1" required><br>
-        <div class="description">*Enter the total marks allocated for the entire exam (e.g., 100 or 50).* </div>
-
-        <button type="button" onclick="generateBlueprint()">Generate Blueprint</button>
-    </form>
-
-    <div id="errorMessage" class="error"></div>
-
-    <div id="result"></div>
-
-    <button onclick="downloadPDF()">Download as PDF</button>
+    <!-- Button to Generate the Blueprint -->
+    <button id="generateBlueprintButton" onclick="generateBlueprint()" style="display: none;">Generate Blueprint</button>
 
     <script>
-        // ✅ Generate input fields for chapters
-        function generateInputs() {
-            const count = document.getElementById('chapterCount').value;
-            const inputsDiv = document.getElementById('inputs');
-            inputsDiv.innerHTML = '';
+        function generateQuestionInputs() {
+            const numQuestions = document.getElementById('numQuestions').value;
+            const container = document.getElementById('questionInputsContainer');
+            container.innerHTML = ''; // Clear previous inputs
 
-            for (let i = 1; i <= count; i++) {
-                inputsDiv.innerHTML += `
-                    <h3>Chapter ${i}</h3>
-
-                    <label>Chapter Title:</label><br>
-                    <input type="text" id="title${i}" placeholder="Chapter Title" required><br>
-                    <div class="description">*Provide the name or main topic of this chapter.*</div>
-
-                    <label>Time Spent (hrs):</label><br>
-                    <input type="number" id="time${i}" placeholder="Time Spent (hrs)" min="1" required><br>
-                    <div class="description">*Enter the total hours spent covering this chapter.*</div>
-
-                    <label>Importance Weight (%):</label><br>
-                    <input type="number" id="importance${i}" placeholder="Importance Weight (%)" min="1" max="100" required><br>
-                    <div class="description">*Assign a percentage for the chapter's exam importance (must total 100%).*</div>
-                `;
-            }
-        }
-
-        // ✅ Validate Inputs
-        function validateInputs(count, totalMarks) {
-            if (count < 1 || totalMarks <= 0) {
-                alert("Please enter valid chapter count and total marks.");
-                return false;
-            }
-
-            let totalImportance = 0;
-
-            for (let i = 1; i <= count; i++) {
-                const title = document.getElementById(`title${i}`).value.trim();
-                const time = parseFloat(document.getElementById(`time${i}`).value);
-                const importance = parseFloat(document.getElementById(`importance${i}`).value);
-
-                if (!title || isNaN(time) || isNaN(importance)) {
-                    alert(`Please complete all fields for Chapter ${i}.`);
-                    return false;
-                }
-
-                totalImportance += importance;
-            }
-
-            if (totalImportance !== 100) {
-                alert(`The total importance weight must be 100%. Currently: ${totalImportance}%`);
-                return false;
-            }
-
-            return true;
-        }
-
-        // ✅ Generate the blueprint
-        function generateBlueprint() {
-            const count = document.getElementById('chapterCount').value;
-            const totalMarks = document.getElementById('totalMarks').value;
-
-            if (!validateInputs(count, totalMarks)) {
+            if (numQuestions <= 0 || isNaN(numQuestions)) {
+                alert("Please enter a valid number of questions.");
                 return;
             }
 
-            let totalTime = 0;
-            const chapters = [];
+            for (let i = 1; i <= numQuestions; i++) {
+                // Create a row for each question
+                const row = document.createElement('div');
 
-            for (let i = 1; i <= count; i++) {
-                const title = document.getElementById(`title${i}`).value;
-                const time = parseFloat(document.getElementById(`time${i}`).value);
-                const importance = parseFloat(document.getElementById(`importance${i}`).value);
+                // Question Number Label
+                const questionLabel = document.createElement('label');
+                questionLabel.textContent = `Question ${i}: `;
 
-                totalTime += time;
-                chapters.push({ title, time, importance });
+                // Covered in Lecture Number Input
+                const lectureInput = document.createElement('input');
+                lectureInput.type = 'number';
+                lectureInput.placeholder = 'Lecture #';
+
+                // ILOs Assessed Input
+                const ilosInput = document.createElement('input');
+                ilosInput.type = 'text';
+                ilosInput.placeholder = 'ILOs Assessed';
+
+                // Append inputs to the row
+                row.appendChild(questionLabel);
+                row.appendChild(lectureInput);
+                row.appendChild(ilosInput);
+                container.appendChild(row);
             }
 
-            let resultHTML = `<h2>Generated Exam Blueprint</h2>
-            <table>
-                <tr>
-                    <th>Chapter</th>
-                    <th>Time Weight (%)</th>
-                    <th>Importance Weight (%)</th>
-                    <th>Final Weight (%)</th>
-                    <th>Marks Allocated</th>
-                </tr>`;
+            // Show the generate blueprint button
+            document.getElementById('generateBlueprintButton').style.display = 'block';
+        }
 
-            chapters.forEach(chapter => {
-                const timeWeight = (chapter.time / totalTime) * 100;
-                const finalWeight = (timeWeight + chapter.importance) / 2;
-                const marks = ((finalWeight / 100) * totalMarks).toFixed(2);
-
-                resultHTML += `
-                    <tr>
-                        <td>${chapter.title}</td>
-                        <td>${timeWeight.toFixed(2)}%</td>
-                        <td>${chapter.importance}%</td>
-                        <td>${finalWeight.toFixed(2)}%</td>
-                        <td>${marks}</td>
-                    </tr>`;
-            });
-
-            resultHTML += `</table>`;
-            document.getElementById('result').innerHTML = resultHTML;
+        function generateBlueprint() {
+            // Collect the inputs and process them (to be implemented later)
+            alert("Blueprint generation is under construction!");
         }
     </script>
-
 </body>
 </html>
