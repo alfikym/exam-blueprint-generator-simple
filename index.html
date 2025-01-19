@@ -74,7 +74,7 @@
                 // Question Number Input
                 const questionInput = document.createElement('input');
                 questionInput.type = 'text';
-                questionInput.placeholder = `Question ${i}`;
+                questionInput.placeholder = 'Question #';
                 questionInput.style.marginRight = '10px';
 
                 // Covered in Lecture Number Input
@@ -86,11 +86,37 @@
                 const ilosInput = document.createElement('input');
                 ilosInput.type = 'text';
                 ilosInput.placeholder = 'ILOs Assessed';
+                ilosInput.style.marginRight = '10px';
+
+                // Additional Inputs for Skills
+                const knowledgeInput = document.createElement('input');
+                knowledgeInput.type = 'text';
+                knowledgeInput.placeholder = 'Knowledge and Understanding';
+                knowledgeInput.style.marginRight = '10px';
+
+                const intellectualInput = document.createElement('input');
+                intellectualInput.type = 'text';
+                intellectualInput.placeholder = 'Intellectual Skills';
+                intellectualInput.style.marginRight = '10px';
+
+                const practicalInput = document.createElement('input');
+                practicalInput.type = 'text';
+                practicalInput.placeholder = 'Professional and Practical Skills';
+                practicalInput.style.marginRight = '10px';
+
+                const transferableInput = document.createElement('input');
+                transferableInput.type = 'text';
+                transferableInput.placeholder = 'Transferable and General Skills';
+                transferableInput.style.marginRight = '10px';
 
                 // Append inputs to the row
                 row.appendChild(questionInput);
                 row.appendChild(lectureInput);
                 row.appendChild(ilosInput);
+                row.appendChild(knowledgeInput);
+                row.appendChild(intellectualInput);
+                row.appendChild(practicalInput);
+                row.appendChild(transferableInput);
                 container.appendChild(row);
             }
 
