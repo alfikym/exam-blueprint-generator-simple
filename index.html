@@ -112,6 +112,7 @@
 
     <!-- Button to Add a Question -->
     <button onclick="addQuestionRow()">Add a Question</button>
+    <button onclick="removeSelectedRows()">Remove Selected</button>
 
     <!-- Container for Generated Inputs -->
     <div id="questionInputsContainer"></div>
@@ -125,6 +126,11 @@
 
             // Create a row for each question
             const row = document.createElement('div');
+
+            // Checkbox for selection
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.style.marginRight = '10px';
 
             // Question Number Input
             const questionInput = document.createElement('input');
@@ -165,6 +171,7 @@
             transferableInput.style.marginRight = '10px';
 
             // Append inputs to the row
+            row.appendChild(checkbox);
             row.appendChild(questionInput);
             row.appendChild(lectureInput);
             row.appendChild(ilosInput);
@@ -176,6 +183,18 @@
 
             // Show the generate blueprint button
             document.getElementById('generateBlueprintButton').style.display = 'block';
+        }
+
+        function removeSelectedRows() {
+            const container = document.getElementById('questionInputsContainer');
+            const rows = container.querySelectorAll('div');
+
+            rows.forEach((row) => {
+                const checkbox = row.querySelector('input[type="checkbox"]');
+                if (checkbox && checkbox.checked) {
+                    container.removeChild(row);
+                }
+            });
         }
 
         function generateBlueprint() {
