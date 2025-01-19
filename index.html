@@ -110,10 +110,8 @@
         </div>
     </div>
 
-    <!-- Input for Number of Questions -->
-    <label for="numQuestions">Number of Questions:</label>
-    <input type="number" id="numQuestions" min="1" placeholder="Enter number of questions">
-    <button onclick="generateQuestionInputs()">Generate Inputs</button>
+    <!-- Button to Add a Question -->
+    <button onclick="addQuestionRow()">Add a Question</button>
 
     <!-- Container for Generated Inputs -->
     <div id="questionInputsContainer"></div>
@@ -122,68 +120,59 @@
     <button id="generateBlueprintButton" onclick="generateBlueprint()" style="display: none;">Generate Blueprint</button>
 
     <script>
-        function generateQuestionInputs() {
-            const numQuestions = document.getElementById('numQuestions').value;
+        function addQuestionRow() {
             const container = document.getElementById('questionInputsContainer');
-            container.innerHTML = ''; // Clear previous inputs
 
-            if (numQuestions <= 0 || isNaN(numQuestions)) {
-                alert("Please enter a valid number of questions.");
-                return;
-            }
+            // Create a row for each question
+            const row = document.createElement('div');
 
-            for (let i = 1; i <= numQuestions; i++) {
-                // Create a row for each question
-                const row = document.createElement('div');
+            // Question Number Input
+            const questionInput = document.createElement('input');
+            questionInput.type = 'text';
+            questionInput.placeholder = 'Question #';
+            questionInput.style.marginRight = '10px';
 
-                // Question Number Input
-                const questionInput = document.createElement('input');
-                questionInput.type = 'text';
-                questionInput.placeholder = 'Question #';
-                questionInput.style.marginRight = '10px';
+            // Covered in Lecture Number Input
+            const lectureInput = document.createElement('input');
+            lectureInput.type = 'text'; // Allow both numbers and letters
+            lectureInput.placeholder = 'Lecture #';
 
-                // Covered in Lecture Number Input
-                const lectureInput = document.createElement('input');
-                lectureInput.type = 'text'; // Allow both numbers and letters
-                lectureInput.placeholder = 'Lecture #';
+            // ILOs Assessed Input
+            const ilosInput = document.createElement('input');
+            ilosInput.type = 'text';
+            ilosInput.placeholder = 'ILOs Assessed';
+            ilosInput.style.marginRight = '10px';
 
-                // ILOs Assessed Input
-                const ilosInput = document.createElement('input');
-                ilosInput.type = 'text';
-                ilosInput.placeholder = 'ILOs Assessed';
-                ilosInput.style.marginRight = '10px';
+            // Additional Inputs for Skills
+            const knowledgeInput = document.createElement('input');
+            knowledgeInput.type = 'number';
+            knowledgeInput.placeholder = 'Knowledge and Understanding';
+            knowledgeInput.style.marginRight = '10px';
 
-                // Additional Inputs for Skills
-                const knowledgeInput = document.createElement('input');
-                knowledgeInput.type = 'text';
-                knowledgeInput.placeholder = 'Knowledge and Understanding';
-                knowledgeInput.style.marginRight = '10px';
+            const intellectualInput = document.createElement('input');
+            intellectualInput.type = 'number';
+            intellectualInput.placeholder = 'Intellectual Skills';
+            intellectualInput.style.marginRight = '10px';
 
-                const intellectualInput = document.createElement('input');
-                intellectualInput.type = 'text';
-                intellectualInput.placeholder = 'Intellectual Skills';
-                intellectualInput.style.marginRight = '10px';
+            const practicalInput = document.createElement('input');
+            practicalInput.type = 'number';
+            practicalInput.placeholder = 'Professional and Practical Skills';
+            practicalInput.style.marginRight = '10px';
 
-                const practicalInput = document.createElement('input');
-                practicalInput.type = 'text';
-                practicalInput.placeholder = 'Professional and Practical Skills';
-                practicalInput.style.marginRight = '10px';
+            const transferableInput = document.createElement('input');
+            transferableInput.type = 'number';
+            transferableInput.placeholder = 'Transferable and General Skills';
+            transferableInput.style.marginRight = '10px';
 
-                const transferableInput = document.createElement('input');
-                transferableInput.type = 'text';
-                transferableInput.placeholder = 'Transferable and General Skills';
-                transferableInput.style.marginRight = '10px';
-
-                // Append inputs to the row
-                row.appendChild(questionInput);
-                row.appendChild(lectureInput);
-                row.appendChild(ilosInput);
-                row.appendChild(knowledgeInput);
-                row.appendChild(intellectualInput);
-                row.appendChild(practicalInput);
-                row.appendChild(transferableInput);
-                container.appendChild(row);
-            }
+            // Append inputs to the row
+            row.appendChild(questionInput);
+            row.appendChild(lectureInput);
+            row.appendChild(ilosInput);
+            row.appendChild(knowledgeInput);
+            row.appendChild(intellectualInput);
+            row.appendChild(practicalInput);
+            row.appendChild(transferableInput);
+            container.appendChild(row);
 
             // Show the generate blueprint button
             document.getElementById('generateBlueprintButton').style.display = 'block';
