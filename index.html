@@ -71,9 +71,11 @@
                 // Create a row for each question
                 const row = document.createElement('div');
 
-                // Question Number Label
-                const questionLabel = document.createElement('label');
-                questionLabel.textContent = `Question ${i}: `;
+                // Question Number Input
+                const questionInput = document.createElement('input');
+                questionInput.type = 'text';
+                questionInput.placeholder = `Question ${i}`;
+                questionInput.style.marginRight = '10px';
 
                 // Covered in Lecture Number Input
                 const lectureInput = document.createElement('input');
@@ -86,7 +88,7 @@
                 ilosInput.placeholder = 'ILOs Assessed';
 
                 // Append inputs to the row
-                row.appendChild(questionLabel);
+                row.appendChild(questionInput);
                 row.appendChild(lectureInput);
                 row.appendChild(ilosInput);
                 container.appendChild(row);
