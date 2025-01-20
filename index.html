@@ -51,21 +51,15 @@
         button:hover {
             background-color: #c0c0c0; /* Slightly darker grey */
         }
-        #questionInputsContainer div {
-            display: flex;
-            align-items: center;
-            margin-bottom: 10px;
-        }
         .checkbox-group {
-            display: none;
-            flex-direction: column;
-            margin-top: 10px;
-            gap: 5px;
-        }
-        .checkbox-group label {
             display: flex;
-            align-items: center;
-            gap: 5px;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        #knowledgeCheckboxes {
+            display: none;
+            margin-top: 10px;
         }
     </style>
 </head>
@@ -119,56 +113,52 @@
 
     <!-- Knowledge and Understanding Skills -->
     <div>
-        <label for="knowledgeBox">Knowledge and Understanding:</label>
-        <input type="text" id="knowledgeBox" placeholder="Selected ILOs will appear here" readonly>
-        <button onclick="toggleCheckboxes()">Insert ILOs</button>
-        <div class="checkbox-group" id="knowledgeCheckboxes">
-            <!-- Checkboxes for a1 to a12 -->
+        <button onclick="toggleKnowledgeCheckboxes()">Insert Knowledge and Understanding Skills</button>
+        <div id="knowledgeCheckboxes" class="checkbox-group">
+            <!-- Checkboxes will be dynamically added here -->
         </div>
-        <button onclick="finalizeILOs()" style="display: none;" id="finalizeButton">Done</button>
+        <textarea id="knowledgeOutput" rows="2" cols="50" readonly placeholder="Selected skills will appear here"></textarea>
     </div>
 
     <script>
-        // Generate checkboxes for a1 to a12
-        const knowledgeCheckboxes = document.getElementById('knowledgeCheckboxes');
-        for (let i = 1; i <= 12; i++) {
-            const checkbox = document.createElement('input');
-            checkbox.type = 'checkbox';
-            checkbox.id = `a${i}`;
-            checkbox.value = `a${i}`;
-            checkbox.onchange = updateKnowledgeBox;
+        function toggleKnowledgeCheckboxes() {
+            const checkboxesContainer = document.getElementById('knowledgeCheckboxes');
+            const outputBox = document.getElementById('knowledgeOutput');
 
-            const label = document.createElement('label');
-            label.htmlFor = `a${i}`;
-            label.textContent = `a${i}`;
-
-            const wrapper = document.createElement('div');
-            wrapper.appendChild(checkbox);
-            wrapper.appendChild(label);
-
-            knowledgeCheckboxes.appendChild(wrapper);
-        }
-
-        function toggleCheckboxes() {
-            const checkboxGroup = document.getElementById('knowledgeCheckboxes');
-            const finalizeButton = document.getElementById('finalizeButton');
-            if (checkboxGroup.style.display === 'none') {
-                checkboxGroup.style.display = 'flex';
-                finalizeButton.style.display = 'inline-block';
+            // Toggle visibility of the checkboxes
+            if (checkboxesContainer.style.display === 'none') {
+                checkboxesContainer.style.display = 'flex';
+                populateKnowledgeCheckboxes();
             } else {
-                checkboxGroup.style.display = 'none';
-                finalizeButton.style.display = 'none';
+                checkboxesContainer.style.display = 'none';
             }
-        }
 
-        function updateKnowledgeBox() {
-            const selected = Array.from(knowledgeCheckboxes.querySelectorAll('input[type="checkbox"]:checked'))
-                .map(checkbox => checkbox.value);
-            document.getElementById('knowledgeBox').value = selected.join(', ');
-        }
+            function populateKnowledgeCheckboxes() {
+                if (checkboxesContainer.childElementCount === 0) {
+                    // Dynamically create checkboxes for a1 to a12
+                    for (let i = 1; i <= 12; i++) {
+                        const checkbox = document.createElement('input');
+                        checkbox.type = 'checkbox';
+                        checkbox.id = `a${i}`;
+                        checkbox.value = `a${i}`;
+                        checkbox.addEventListener('change', updateOutput);
 
-        function finalizeILOs() {
-            toggleCheckboxes(); // Hide checkboxes and finalize button
+                        const label = document.createElement('label');
+                        label.htmlFor = `a${i}`;
+                        label.textContent = `a${i}`;
+
+                        checkboxesContainer.appendChild(checkbox);
+                        checkboxesContainer.appendChild(label);
+                    }
+                }
+            }
+
+            function updateOutput() {
+                const selectedValues = Array.from(checkboxesContainer.querySelectorAll('input[type="checkbox"]:checked'))
+                    .map(cb => cb.value)
+                    .join(', ');
+                outputBox.value = selectedValues;
+            }
         }
     </script>
 </body>
