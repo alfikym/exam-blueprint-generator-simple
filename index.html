@@ -56,6 +56,16 @@
             align-items: center;
             margin-bottom: 10px;
         }
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-top: 5px;
+        }
+        .checkbox-group label {
+            font-size: 14px;
+            margin-right: 10px;
+        }
     </style>
 </head>
 <body>
@@ -168,36 +178,47 @@
             ilosInput.placeholder = 'ILOs Assessed';
             ilosInput.style.marginRight = '10px';
 
-            // Additional Inputs for Skills
-            const knowledgeInput = document.createElement('input');
-            knowledgeInput.type = 'number';
-            knowledgeInput.placeholder = 'Knowledge and Understanding';
-            knowledgeInput.style.marginRight = '10px';
+            // Knowledge and Understanding Checkbox Group
+            const knowledgeGroup = document.createElement('div');
+            knowledgeGroup.className = 'checkbox-group';
+            for (let i = 1; i <= 12; i++) {
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.id = `a${i}`;
+                checkbox.value = `a${i}`;
 
-            const intellectualInput = document.createElement('input');
-            intellectualInput.type = 'number';
-            intellectualInput.placeholder = 'Intellectual Skills';
-            intellectualInput.style.marginRight = '10px';
+                const label = document.createElement('label');
+                label.htmlFor = `a${i}`;
+                label.textContent = `a${i}`;
 
-            const practicalInput = document.createElement('input');
-            practicalInput.type = 'number';
-            practicalInput.placeholder = 'Professional and Practical Skills';
-            practicalInput.style.marginRight = '10px';
+                knowledgeGroup.appendChild(checkbox);
+                knowledgeGroup.appendChild(label);
+            }
 
-            const transferableInput = document.createElement('input');
-            transferableInput.type = 'number';
-            transferableInput.placeholder = 'Transferable and General Skills';
-            transferableInput.style.marginRight = '10px';
+            // Intellectual Skills Checkbox Group
+            const intellectualGroup = document.createElement('div');
+            intellectualGroup.className = 'checkbox-group';
+            for (let i = 1; i <= 12; i++) {
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.id = `b${i}`;
+                checkbox.value = `b${i}`;
+
+                const label = document.createElement('label');
+                label.htmlFor = `b${i}`;
+                label.textContent = `b${i}`;
+
+                intellectualGroup.appendChild(checkbox);
+                intellectualGroup.appendChild(label);
+            }
 
             // Append inputs to the row
             row.appendChild(checkbox);
             row.appendChild(questionInput);
             row.appendChild(lectureInput);
             row.appendChild(ilosInput);
-            row.appendChild(knowledgeInput);
-            row.appendChild(intellectualInput);
-            row.appendChild(practicalInput);
-            row.appendChild(transferableInput);
+            row.appendChild(knowledgeGroup);
+            row.appendChild(intellectualGroup);
             container.appendChild(row);
 
             // Show the generate blueprint button
