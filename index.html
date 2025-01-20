@@ -51,15 +51,10 @@
         button:hover {
             background-color: #c0c0c0; /* Slightly darker grey */
         }
-        .checkbox-group {
+        #questionInputsContainer div {
             display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-top: 10px;
-        }
-        #knowledgeCheckboxes {
-            display: none;
-            margin-top: 10px;
+            align-items: center;
+            margin-bottom: 10px;
         }
     </style>
 </head>
@@ -109,56 +104,121 @@
             <label for="courseTitle">Course Title:</label>
             <input type="text" id="courseTitle" placeholder="Enter course title">
         </div>
+        <div id="instructorsContainer">
+            <label for="courseInstructor">Course Instructors:</label>
+            <input type="text" id="courseInstructor" placeholder="Enter instructor name">
+            <button onclick="addInstructor()">Add Instructor</button>
+            <button onclick="removeLastInstructor()">Remove Last Instructor</button>
+        </div>
     </div>
 
-    <!-- Knowledge and Understanding Skills -->
-    <div>
-        <button onclick="toggleKnowledgeCheckboxes()">Insert Knowledge and Understanding Skills</button>
-        <div id="knowledgeCheckboxes" class="checkbox-group">
-            <!-- Checkboxes will be dynamically added here -->
-        </div>
-        <textarea id="knowledgeOutput" rows="2" cols="50" readonly placeholder="Selected skills will appear here"></textarea>
-    </div>
+    <!-- Button to Add a Question -->
+    <button onclick="addQuestionRow()">Add a Question</button>
+    <button onclick="removeSelectedRows()">Remove Selected</button>
+
+    <!-- Container for Generated Inputs -->
+    <div id="questionInputsContainer"></div>
+
+    <!-- Button to Generate the Blueprint -->
+    <button id="generateBlueprintButton" onclick="generateBlueprint()" style="display: none;">Generate Blueprint</button>
 
     <script>
-        function toggleKnowledgeCheckboxes() {
-            const checkboxesContainer = document.getElementById('knowledgeCheckboxes');
-            const outputBox = document.getElementById('knowledgeOutput');
+        function addInstructor() {
+            const container = document.getElementById('instructorsContainer');
+            const newInstructor = document.createElement('input');
+            newInstructor.type = 'text';
+            newInstructor.placeholder = 'Enter instructor name';
+            newInstructor.style.marginRight = '10px';
+            container.insertBefore(newInstructor, container.children[container.children.length - 2]);
+        }
 
-            // Toggle visibility of the checkboxes
-            if (checkboxesContainer.style.display === 'none') {
-                checkboxesContainer.style.display = 'flex';
-                populateKnowledgeCheckboxes();
-            } else {
-                checkboxesContainer.style.display = 'none';
+        function removeLastInstructor() {
+            const container = document.getElementById('instructorsContainer');
+            const inputs = container.querySelectorAll('input[type="text"]');
+            if (inputs.length > 1) {
+                container.removeChild(inputs[inputs.length - 1]);
             }
+        }
 
-            function populateKnowledgeCheckboxes() {
-                if (checkboxesContainer.childElementCount === 0) {
-                    // Dynamically create checkboxes for a1 to a12
-                    for (let i = 1; i <= 12; i++) {
-                        const checkbox = document.createElement('input');
-                        checkbox.type = 'checkbox';
-                        checkbox.id = `a${i}`;
-                        checkbox.value = `a${i}`;
-                        checkbox.addEventListener('change', updateOutput);
+        function addQuestionRow() {
+            const container = document.getElementById('questionInputsContainer');
 
-                        const label = document.createElement('label');
-                        label.htmlFor = `a${i}`;
-                        label.textContent = `a${i}`;
+            // Create a row for each question
+            const row = document.createElement('div');
 
-                        checkboxesContainer.appendChild(checkbox);
-                        checkboxesContainer.appendChild(label);
-                    }
+            // Checkbox for selection
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.style.marginRight = '10px';
+
+            // Question Number Input
+            const questionInput = document.createElement('input');
+            questionInput.type = 'text';
+            questionInput.placeholder = 'Question #';
+            questionInput.style.marginRight = '10px';
+
+            // Covered in Lecture Number Input
+            const lectureInput = document.createElement('input');
+            lectureInput.type = 'text'; // Allow both numbers and letters
+            lectureInput.placeholder = 'Lecture #';
+
+            // ILOs Assessed Input
+            const ilosInput = document.createElement('input');
+            ilosInput.type = 'text';
+            ilosInput.placeholder = 'ILOs Assessed';
+            ilosInput.style.marginRight = '10px';
+
+            // Additional Inputs for Skills
+            const knowledgeInput = document.createElement('input');
+            knowledgeInput.type = 'number';
+            knowledgeInput.placeholder = 'Knowledge and Understanding';
+            knowledgeInput.style.marginRight = '10px';
+
+            const intellectualInput = document.createElement('input');
+            intellectualInput.type = 'number';
+            intellectualInput.placeholder = 'Intellectual Skills';
+            intellectualInput.style.marginRight = '10px';
+
+            const practicalInput = document.createElement('input');
+            practicalInput.type = 'number';
+            practicalInput.placeholder = 'Professional and Practical Skills';
+            practicalInput.style.marginRight = '10px';
+
+            const transferableInput = document.createElement('input');
+            transferableInput.type = 'number';
+            transferableInput.placeholder = 'Transferable and General Skills';
+            transferableInput.style.marginRight = '10px';
+
+            // Append inputs to the row
+            row.appendChild(checkbox);
+            row.appendChild(questionInput);
+            row.appendChild(lectureInput);
+            row.appendChild(ilosInput);
+            row.appendChild(knowledgeInput);
+            row.appendChild(intellectualInput);
+            row.appendChild(practicalInput);
+            row.appendChild(transferableInput);
+            container.appendChild(row);
+
+            // Show the generate blueprint button
+            document.getElementById('generateBlueprintButton').style.display = 'block';
+        }
+
+        function removeSelectedRows() {
+            const container = document.getElementById('questionInputsContainer');
+            const rows = container.querySelectorAll('div');
+
+            rows.forEach((row) => {
+                const checkbox = row.querySelector('input[type="checkbox"]');
+                if (checkbox && checkbox.checked) {
+                    container.removeChild(row);
                 }
-            }
+            });
+        }
 
-            function updateOutput() {
-                const selectedValues = Array.from(checkboxesContainer.querySelectorAll('input[type="checkbox"]:checked'))
-                    .map(cb => cb.value)
-                    .join(', ');
-                outputBox.value = selectedValues;
-            }
+        function generateBlueprint() {
+            // Collect the inputs and process them (to be implemented later)
+            alert("Blueprint generation is under construction!");
         }
     </script>
 </body>
