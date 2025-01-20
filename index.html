@@ -179,16 +179,6 @@
             intellectualInput.placeholder = 'Intellectual Skills';
             intellectualInput.style.marginRight = '10px';
 
-            const practicalInput = document.createElement('input');
-            practicalInput.type = 'number';
-            practicalInput.placeholder = 'Professional and Practical Skills';
-            practicalInput.style.marginRight = '10px';
-
-            const transferableInput = document.createElement('input');
-            transferableInput.type = 'number';
-            transferableInput.placeholder = 'Transferable and General Skills';
-            transferableInput.style.marginRight = '10px';
-
             // Append inputs to the row
             row.appendChild(checkbox);
             row.appendChild(questionInput);
@@ -196,8 +186,6 @@
             row.appendChild(ilosInput);
             row.appendChild(knowledgeInput);
             row.appendChild(intellectualInput);
-            row.appendChild(practicalInput);
-            row.appendChild(transferableInput);
             container.appendChild(row);
 
             // Show the generate blueprint button
