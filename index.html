@@ -57,14 +57,15 @@
             margin-bottom: 10px;
         }
         .checkbox-group {
-            display: flex;
-            flex-wrap: wrap;
+            display: none;
+            flex-direction: column;
+            margin-top: 10px;
             gap: 5px;
-            margin-top: 5px;
         }
         .checkbox-group label {
-            font-size: 14px;
-            margin-right: 10px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
         }
     </style>
 </head>
@@ -114,132 +115,60 @@
             <label for="courseTitle">Course Title:</label>
             <input type="text" id="courseTitle" placeholder="Enter course title">
         </div>
-        <div id="instructorsContainer">
-            <label for="courseInstructor">Course Instructors:</label>
-            <input type="text" id="courseInstructor" placeholder="Enter instructor name">
-            <button onclick="addInstructor()">Add Instructor</button>
-            <button onclick="removeLastInstructor()">Remove Last Instructor</button>
-        </div>
     </div>
 
-    <!-- Button to Add a Question -->
-    <button onclick="addQuestionRow()">Add a Question</button>
-    <button onclick="removeSelectedRows()">Remove Selected</button>
-
-    <!-- Container for Generated Inputs -->
-    <div id="questionInputsContainer"></div>
-
-    <!-- Button to Generate the Blueprint -->
-    <button id="generateBlueprintButton" onclick="generateBlueprint()" style="display: none;">Generate Blueprint</button>
+    <!-- Knowledge and Understanding Skills -->
+    <div>
+        <label for="knowledgeBox">Knowledge and Understanding:</label>
+        <input type="text" id="knowledgeBox" placeholder="Selected ILOs will appear here" readonly>
+        <button onclick="toggleCheckboxes()">Insert ILOs</button>
+        <div class="checkbox-group" id="knowledgeCheckboxes">
+            <!-- Checkboxes for a1 to a12 -->
+        </div>
+        <button onclick="finalizeILOs()" style="display: none;" id="finalizeButton">Done</button>
+    </div>
 
     <script>
-        function addInstructor() {
-            const container = document.getElementById('instructorsContainer');
-            const newInstructor = document.createElement('input');
-            newInstructor.type = 'text';
-            newInstructor.placeholder = 'Enter instructor name';
-            newInstructor.style.marginRight = '10px';
-            container.insertBefore(newInstructor, container.children[container.children.length - 2]);
-        }
-
-        function removeLastInstructor() {
-            const container = document.getElementById('instructorsContainer');
-            const inputs = container.querySelectorAll('input[type="text"]');
-            if (inputs.length > 1) {
-                container.removeChild(inputs[inputs.length - 1]);
-            }
-        }
-
-        function addQuestionRow() {
-            const container = document.getElementById('questionInputsContainer');
-
-            // Create a row for each question
-            const row = document.createElement('div');
-
-            // Checkbox for selection
+        // Generate checkboxes for a1 to a12
+        const knowledgeCheckboxes = document.getElementById('knowledgeCheckboxes');
+        for (let i = 1; i <= 12; i++) {
             const checkbox = document.createElement('input');
             checkbox.type = 'checkbox';
-            checkbox.style.marginRight = '10px';
+            checkbox.id = `a${i}`;
+            checkbox.value = `a${i}`;
+            checkbox.onchange = updateKnowledgeBox;
 
-            // Question Number Input
-            const questionInput = document.createElement('input');
-            questionInput.type = 'text';
-            questionInput.placeholder = 'Question #';
-            questionInput.style.marginRight = '10px';
+            const label = document.createElement('label');
+            label.htmlFor = `a${i}`;
+            label.textContent = `a${i}`;
 
-            // Covered in Lecture Number Input
-            const lectureInput = document.createElement('input');
-            lectureInput.type = 'text'; // Allow both numbers and letters
-            lectureInput.placeholder = 'Lecture #';
+            const wrapper = document.createElement('div');
+            wrapper.appendChild(checkbox);
+            wrapper.appendChild(label);
 
-            // ILOs Assessed Input
-            const ilosInput = document.createElement('input');
-            ilosInput.type = 'text';
-            ilosInput.placeholder = 'ILOs Assessed';
-            ilosInput.style.marginRight = '10px';
-
-            // Knowledge and Understanding Checkbox Group
-            const knowledgeGroup = document.createElement('div');
-            knowledgeGroup.className = 'checkbox-group';
-            for (let i = 1; i <= 12; i++) {
-                const checkbox = document.createElement('input');
-                checkbox.type = 'checkbox';
-                checkbox.id = `a${i}`;
-                checkbox.value = `a${i}`;
-
-                const label = document.createElement('label');
-                label.htmlFor = `a${i}`;
-                label.textContent = `a${i}`;
-
-                knowledgeGroup.appendChild(checkbox);
-                knowledgeGroup.appendChild(label);
-            }
-
-            // Intellectual Skills Checkbox Group
-            const intellectualGroup = document.createElement('div');
-            intellectualGroup.className = 'checkbox-group';
-            for (let i = 1; i <= 12; i++) {
-                const checkbox = document.createElement('input');
-                checkbox.type = 'checkbox';
-                checkbox.id = `b${i}`;
-                checkbox.value = `b${i}`;
-
-                const label = document.createElement('label');
-                label.htmlFor = `b${i}`;
-                label.textContent = `b${i}`;
-
-                intellectualGroup.appendChild(checkbox);
-                intellectualGroup.appendChild(label);
-            }
-
-            // Append inputs to the row
-            row.appendChild(checkbox);
-            row.appendChild(questionInput);
-            row.appendChild(lectureInput);
-            row.appendChild(ilosInput);
-            row.appendChild(knowledgeGroup);
-            row.appendChild(intellectualGroup);
-            container.appendChild(row);
-
-            // Show the generate blueprint button
-            document.getElementById('generateBlueprintButton').style.display = 'block';
+            knowledgeCheckboxes.appendChild(wrapper);
         }
 
-        function removeSelectedRows() {
-            const container = document.getElementById('questionInputsContainer');
-            const rows = container.querySelectorAll('div');
-
-            rows.forEach((row) => {
-                const checkbox = row.querySelector('input[type="checkbox"]');
-                if (checkbox && checkbox.checked) {
-                    container.removeChild(row);
-                }
-            });
+        function toggleCheckboxes() {
+            const checkboxGroup = document.getElementById('knowledgeCheckboxes');
+            const finalizeButton = document.getElementById('finalizeButton');
+            if (checkboxGroup.style.display === 'none') {
+                checkboxGroup.style.display = 'flex';
+                finalizeButton.style.display = 'inline-block';
+            } else {
+                checkboxGroup.style.display = 'none';
+                finalizeButton.style.display = 'none';
+            }
         }
 
-        function generateBlueprint() {
-            // Collect the inputs and process them (to be implemented later)
-            alert("Blueprint generation is under construction!");
+        function updateKnowledgeBox() {
+            const selected = Array.from(knowledgeCheckboxes.querySelectorAll('input[type="checkbox"]:checked'))
+                .map(checkbox => checkbox.value);
+            document.getElementById('knowledgeBox').value = selected.join(', ');
+        }
+
+        function finalizeILOs() {
+            toggleCheckboxes(); // Hide checkboxes and finalize button
         }
     </script>
 </body>
