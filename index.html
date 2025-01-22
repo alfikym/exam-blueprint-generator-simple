@@ -107,7 +107,7 @@
         </div>
     </div>
 
-    <!-- Button to Add a Question -->
+    <!-- Button to Add Chapter or Main Topic -->
     <button onclick="addQuestionRow()">Add a Question</button>
     <button onclick="removeSelectedRows()">Remove Selected</button>
 
@@ -149,13 +149,13 @@
             // Question Number Input
             const questionInput = document.createElement('input');
             questionInput.type = 'text';
-            questionInput.placeholder = 'Question #';
+            questionInput.placeholder = 'Topic or Chapter #';
             questionInput.style.marginRight = '10px';
 
             // Covered in Lecture Number Input
             const lectureInput = document.createElement('input');
             lectureInput.type = 'text'; // Allow both numbers and letters
-            lectureInput.placeholder = 'Lecture #';
+            lectureInput.placeholder = '# of Teaching Hours';
 
             // ILOs Assessed Input
             const ilosInput = document.createElement('input');
